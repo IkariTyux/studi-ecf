@@ -31,11 +31,11 @@ stages:
   jobs:
   - job: Test
     steps:
-    - task: Test@2
+    - task: Docker@3
       displayName: Login to ACR
       inputs:
         command: login
-        containerRegistry: rphredacr
+        containerRegistry: rphredacr.azurecr.io
     - script: |
         docker pull mycompany.azurecr.io/my-app:$(tag)
         docker run --rm mycompany.azurecr.io/my-app:$(tag) <your-test-command>
