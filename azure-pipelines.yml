@@ -8,7 +8,7 @@ pool:
   vmImage: ubuntu-latest
 
 variables:
-  image: "rphredacr.azurecr.io/pytest"
+  image: "rphredacr.azurecr.io/pytest:v1"
   tag: '$(Build.BuildId)'
 
 stages:
@@ -34,5 +34,5 @@ stages:
     displayName: Test
     steps:
     - script: |
-        docker run --rm $(image):$(tag) pytest
+        docker run --rm $(image) pytest
       displayName: Test the app
