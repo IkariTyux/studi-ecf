@@ -15,7 +15,6 @@ stages:
 - stage: Build
   displayName: Build image
   jobs:
-  
   - job: Build
     displayName: Build
     steps:
@@ -29,4 +28,9 @@ stages:
 
 - stage: Test
   displayName: Test app
-  - script: docker run --rm $(image):$(tag) pytest
+  jobs:
+  - job: Test
+    displayName: Test
+    steps:
+      - script: | 
+        docker run --rm $(image):$(tag) pytest
