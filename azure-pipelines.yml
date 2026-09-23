@@ -45,6 +45,6 @@ stages:
           az acr login --name rphredacr
 
     - script: |
-        docker pull myregistry.azurecr.io/my-app:$(tag)
-        docker run --rm myregistry.azurecr.io/my-app:$(tag) <your-test-command>
+        docker pull $(image)
+        docker run --rm $(image) pytest
       displayName: Run tests
