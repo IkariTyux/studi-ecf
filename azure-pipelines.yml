@@ -31,7 +31,7 @@ stages:
   jobs:
   - job: Test
     steps:
-    - task: Docker@2
+    - task: Test@2
       displayName: Login to ACR
       inputs:
         command: login
