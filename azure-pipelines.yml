@@ -28,9 +28,11 @@ stages:
 
 - stage: Test
   displayName: Test app
+  dependsOn: Build
   jobs:
   - job: Test
     displayName: Test
     steps:
-      - script: | 
+    - script: |
         docker run --rm $(image):$(tag) pytest
+      displayName: Test the app
