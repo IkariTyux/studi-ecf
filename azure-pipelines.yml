@@ -35,7 +35,7 @@ stages:
       displayName: Login to ACR
       inputs:
         command: login
-        containerRegistry: rphredacr.azurecr.io
+        containerRegistry: subscription-1-service-connection
     - script: |
         docker pull mycompany.azurecr.io/my-app:$(tag)
         docker run --rm mycompany.azurecr.io/my-app:$(tag) <your-test-command>
