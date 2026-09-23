@@ -27,13 +27,16 @@ stages:
           $(tag)
 
 - stage: Test
-  displayName: Test app
   dependsOn: Build
   jobs:
   - job: Test
-    displayName: Test
     steps:
+    - task: Docker@2
+      displayName: Login to ACR
+      inputs:
+        command: login
+        containerRegistry: rphredacr
     - script: |
-        docker pull $(image)
-        docker run --rm $(image) pytest
-      displayName: Test the app
+        docker pull mycompany.azurecr.io/my-app:$(tag)
+        docker run --rm mycompany.azurecr.io/my-app:$(tag) <your-test-command>
+      displayName: Test image
