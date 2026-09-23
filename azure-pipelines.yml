@@ -27,16 +27,24 @@ stages:
           $(tag)
 
 - stage: Test
+  displayName: Test image
   dependsOn: Build
+
   jobs:
   - job: Test
+    displayName: Test
     steps:
-    - task: Docker@2
+
+    - task: AzureCLI@2
       displayName: Login to ACR
       inputs:
-        command: login
-        containerRegistry: subscription-1-service-connection
+        azureSubscription: subscription-1-service-connection
+        scriptType: bash
+        scriptLocation: inlineScript
+        inlineScript: |
+          az acr login --name rphredacr
+
     - script: |
-        docker pull mycompany.azurecr.io/my-app:$(tag)
-        docker run --rm mycompany.azurecr.io/my-app:$(tag) <your-test-command>
-      displayName: Test image
+        docker pull myregistry.azurecr.io/my-app:$(tag)
+        docker run --rm myregistry.azurecr.io/my-app:$(tag) <your-test-command>
+      displayName: Run tests
