@@ -17,10 +17,8 @@ BACK_SC="$RG-backend-sc"
 CT="$RG-ct"
 DB="$RG-db"
 VM="$RG-vm"
-PROD_SUBNET="$RG-prod-subnet"
-PROD_SUBNET="$RG-dev-subnet"
-PROD_SUBNET_ADDR="10.10.1.0/24"
-DEV_SUBNET_ADDR="10.10.2.0/24"
+SUBNET="$RG-prod-subnet"
+SUBNET_ADDR="10.10.1.0/24"
 
 
 # Env. preparation
@@ -31,8 +29,7 @@ az identity create -n "$ID" -g "$RG"
 az containerapp env create -n "$CT_ENV" -g "$RG" -l "$REGION"
 az acr build -t "$RG-img:v2" ~/code/move2cloud
 az network vnet create -n "$VNET" -g "$RG" --address-prefix "10.10.0.0/16" 
-az network vnet subnet create -n "$PROD_SUBNET" -g "$RG" --address-prefix "$PROD_SUBNET_ADDR" --delegations "Microsoft.DBforPostgreSQL/flexibleServers"
-az network vnet subnet create -n "$DEV_SUBNET" -g "$RG" --address-prefix "$DEV_SUBNET_ADDR"
+az network vnet subnet create -n "$SUBNET" -g "$RG" --address-prefix "$SUBNET_ADDR" --delegations "Microsoft.DBforPostgreSQL/flexibleServers"
 az network private-dns zone create -n "$RG.private.postgres.database.azure.com" -g "$RG"
 
 # Objects creation
@@ -90,7 +87,7 @@ az postgres flexible-server create \
   --tier Burstable \
   --storage-size 32 \
   --vnet "$VNET" \
-  --subnet "$PROD_SUBNET"
+  --subnet "$SUBNET"
   --private-dns-zone "$DNS_ZONE"
   --admin-user "$DBUser" \
   --admin-password "$DBPassword" \
@@ -102,4 +99,5 @@ az vm create \
     --image debian-13 \
     --size Standard_DC1_v3
     --public-ip-sku Standard \
-    --admin-username "dev-user"
+    --vnet "$VNET" \
+    --subnet "$SUBNET"
